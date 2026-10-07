@@ -1,0 +1,40 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Open Settings Tab"]):::bw
+    B["Load user profile and\nelectricity rate/provider"]:::bw
+    C["Look up pending household\ninvitations for this email"]:::bw
+    D{"Any pending\ninvitations?"}:::bw
+
+    A --> B --> C --> D
+    D -- "Yes" --> E["Show 'Invitations' section:\nhome name, inviter, avatar"]:::bw
+    D -- "No" --> F["Skip invitations section"]:::bw
+
+    E --> G{"User taps"}:::bw
+    G -- "Tap X (decline)" --> H["Confirm: 'Decline\ninvitation?'"]:::bw
+    H -- "Cancel" --> E
+    H -- "Decline" --> I["Remove invite from Firebase"]:::bw --> E
+    G -- "Tap 'Accept Invite'" --> J["Accept invite: join\nhousehold as member"]:::bw
+    J --> K(["Home switches to\nshared household"]):::bw
+
+    F --> L["Show settings rows:\nAccount, People,\nElectricity Rates"]:::bw
+    L --> M["Show Dark mode switch,\nSecurity, Help, About"]:::bw
+    M --> N{"User taps a row"}:::bw
+
+    N -- "Account" --> Z1(["Go to Account\n(see diagram 2)"]):::bw
+    N -- "People" --> Z2(["Go to People\n(see diagram 5)"]):::bw
+    N -- "Electricity Rates" --> Z3(["Go to Electricity Rate\n(see diagram 4)"]):::bw
+    N -- "Toggle Dark mode" --> O["Switch theme preference\n(light/dark) instantly"]:::bw --> M
+    N -- "Security / Help / About" --> P["Show 'This section is\ncoming soon' alert"]:::bw --> M
+
+    M --> Q["Show app version and\ncopyright footer"]:::bw
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

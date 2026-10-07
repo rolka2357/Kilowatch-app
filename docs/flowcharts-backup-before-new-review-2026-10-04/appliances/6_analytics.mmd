@@ -1,0 +1,34 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Enter Analytics screen\n(View Appliance Analytics OR\nView Room Analytics)"]):::bw
+    B["Load usage history\n(hourly/daily/weekly/monthly)\nfor the plug(s)"]:::bw
+    C["Default to Day tab,\nkWh unit"]:::bw
+    D{"User taps"}:::bw
+
+    A --> B --> C --> D
+
+    D -- "Tap back arrow" --> Z1(["Return to Appliance Detail\nor Room Details"]):::bw
+
+    D -- "Tap Day / Week /\nMonth tab" --> E["Switch active tab"]:::bw --> F
+    D -- "Tap View in Php /\nView in kWh" --> G["Switch unit display"]:::bw --> F
+
+    F{"Enough days tracked\nfor this tab?\n(Day 2+, Week 7+, Month 30+)"}:::bw
+
+    F -- "No" --> H["Show empty state:\n'Just getting started' or\n'Need N more days',\nwith What Unlocks When list"]:::bw --> D
+
+    F -- "Yes" --> I["Show period total vs\nprevious period, with\nkWh/Php difference"]:::bw
+    I --> J["Show usage trend bar chart\n(hourly for Day, weekday for\nWeek, monthly for Month)"]:::bw
+    J --> K{"Screen is Appliance\nAnalytics or Room Analytics?"}:::bw
+    K -- "Appliance Analytics" --> L["Show Operating Time\n(active hours today)"]:::bw --> D
+    K -- "Room Analytics" --> M["Show By Appliance breakdown:\nshare percent per appliance\nin this room"]:::bw --> D
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

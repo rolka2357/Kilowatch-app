@@ -1,0 +1,240 @@
+%%{init: {'theme': 'base', 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'tertiaryColor': '#ffffff',
+  'attributeBackgroundColorOdd': '#ffffff',
+  'attributeBackgroundColorEven': '#ffffff',
+  'relationLabelColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+erDiagram
+    USERS {
+        string uid PK
+        string fullName
+        string email
+        string emailKey UK
+        string photoURL
+        string activeHomeOwnerUid FK
+        string electricityProviderId
+        float electricityRate
+        int createdAt
+    }
+
+    ELECTRICITY_RATE_HISTORY {
+        string uid FK
+        string historyId PK
+        float rate
+        string providerId
+        int startedAt
+        int endedAt
+    }
+
+    ADMINS {
+        string uid PK, FK
+    }
+
+    HOMES {
+        string ownerUid PK, FK
+        string name
+        int createdAt
+    }
+
+    MEMBERSHIPS {
+        string uid FK
+        string ownerUid FK
+        string role
+        string status
+        int joinedAt
+    }
+
+    HOME_MEMBERS {
+        string ownerUid FK
+        string uid FK
+        string role
+        string status
+        string inviteId FK
+        int joinedAt
+    }
+
+    INVITES {
+        string inviteId PK
+        string fromUid FK
+        string inviteeUid FK
+        string email
+        string role
+        string status
+        int createdAt
+    }
+
+    ROOMS {
+        string roomId PK
+        string ownerUid FK
+        string name
+        string imageUri
+        int createdAt
+    }
+
+    APPLIANCES {
+        string applianceId PK
+        string ownerUid FK
+        string roomId FK
+        string deviceId FK, UK
+        string name
+        int createdAt
+    }
+
+    DEVICES {
+        string deviceId PK
+        string ownerUid FK
+        string roomId FK
+        string applianceId FK, UK
+        string identifier
+        string productId
+        boolean online
+        boolean switchOn
+        int pairedAt
+    }
+
+    SCHEDULES {
+        string scheduleId PK
+        string deviceId FK
+        boolean enabled
+        string action
+        string days
+        int hour12
+        int minute
+        string ampm
+    }
+
+    USAGE_LIMITS {
+        string limitId PK
+        string deviceId FK
+        boolean enabled
+        float limitPhp
+        boolean notifyEnabled
+        boolean autoOffEnabled
+        string days
+    }
+
+    LIVE_READINGS {
+        string deviceId PK, FK
+        float kwh
+        float powerW
+        float voltageV
+        float currentMa
+        boolean online
+        int timestamp
+    }
+
+    HISTORY_BUCKETS {
+        string deviceId FK
+        string granularity PK
+        string bucketKey PK
+        float kwh
+        string date
+        int updatedAt
+    }
+
+    DEVICE_OWNERS {
+        string deviceId PK
+        string uid FK
+    }
+
+    DEVICE_IDENTIFIERS {
+        string identifier PK
+        string ownerUid FK
+        string deviceId FK
+    }
+
+    HISTORY_LINKS {
+        string ownerUid FK
+        string identifier PK
+        string historyDeviceId FK
+    }
+
+    KILOSAVE_SETTINGS {
+        string ownerUid PK, FK
+        float monthlyGoal
+        float weeklyGoal
+        string periodKey
+        string periodStart
+        string periodEnd
+    }
+
+    KILOSAVE_WEEKS {
+        string ownerUid FK
+        string weekKey PK
+        int weekIndex
+        float amount
+        string status
+        string via
+        string periodKey
+    }
+
+    KILOSAVE_PERIODS {
+        string ownerUid FK
+        string periodKey PK
+        float actualBillPhp
+        float estimatedPhp
+        float totalSetAside
+        int coveragePct
+    }
+
+    TIPS_MONTHS {
+        string ownerUid FK
+        string monthKey PK
+        string weekKey
+        string promptVersion
+        string layoutFingerprint
+        string rooms
+    }
+
+    NEWS_ITEMS {
+        string newsId PK
+        string title
+        string description
+        string imageUrl
+        string link
+        int order
+        boolean active
+    }
+
+    PROVIDERS {
+        string providerId PK
+        string name
+        string shortName
+        float rate
+        string logoUrl
+    }
+
+    USERS ||--|| HOMES : "owns (uid = ownerUid)"
+    USERS ||--o{ ELECTRICITY_RATE_HISTORY : logs
+    USERS ||--o| ADMINS : "may be"
+    USERS ||--o{ MEMBERSHIPS : maintains
+    HOMES ||--o{ MEMBERSHIPS : "referenced by"
+    HOMES ||--o{ HOME_MEMBERS : includes
+    USERS ||--o{ HOME_MEMBERS : "is member"
+    HOMES ||--o{ INVITES : sends
+    USERS ||--o{ INVITES : receives
+    HOMES ||--o{ ROOMS : contains
+    ROOMS ||--o{ APPLIANCES : contains
+    APPLIANCES ||--|| DEVICES : "paired with"
+    DEVICES ||--o{ SCHEDULES : has
+    DEVICES ||--o{ USAGE_LIMITS : has
+    DEVICES ||--|| LIVE_READINGS : reports
+    DEVICES ||--o{ HISTORY_BUCKETS : accumulates
+    DEVICES ||--|| DEVICE_OWNERS : "claimed as"
+    USERS ||--o{ DEVICE_OWNERS : claims
+    USERS ||--o{ DEVICE_IDENTIFIERS : registers
+    DEVICES ||--o| DEVICE_IDENTIFIERS : "identified by"
+    USERS ||--o{ HISTORY_LINKS : keeps
+    DEVICES ||--o{ HISTORY_LINKS : "re-attached via"
+    HOMES ||--|| KILOSAVE_SETTINGS : configures
+    HOMES ||--o{ KILOSAVE_WEEKS : tracks
+    HOMES ||--o{ KILOSAVE_PERIODS : tracks
+    HOMES ||--o{ TIPS_MONTHS : generates
+    ADMINS ||--o{ NEWS_ITEMS : manages
+    ADMINS ||--o{ PROVIDERS : manages

@@ -1,0 +1,53 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Open Analytics Tab"]):::bw
+    B["Load home device list,\nlive kWh, and usage history\nfor every device"]:::bw
+    C["Default to Day period,\nkWh unit, consumption anchor = today;\ncomparison defaults to Week\nwith its own compareAnchor"]:::bw
+    D["Display dismissible rate banner,\nkWh/Php unit toggle,\nYour Consumption Trend,\nand Your Comparison Trend\n(independent sections)"]:::bw
+    E{"User taps"}:::bw
+
+    A --> B --> C --> D --> E
+
+    E -- "Tap X on rate banner" --> F["Hide rate banner"]:::bw --> D
+    E -- "Tap 'Settings' link\nin rate banner" --> Z1(["Go to Settings tab"]):::bw
+    E -- "Tap kWh / Php\nunit toggle" --> G["Switch display unit for\nconsumption + comparison\ntotals and charts"]:::bw --> D
+
+    E -- "Consumption: Day / Week /\nMonth / Year chip" --> H["Set consumption period,\nreset consumption anchor\nto today"]:::bw --> I
+    E -- "Consumption: ‹ / ›\ndate arrows" --> J{"Would next period\ngo into the future?"}:::bw
+    J -- "Yes (next disabled)" --> D
+    J -- "No" --> K["Shift consumption anchor\nby one period"]:::bw --> I
+
+    I["Recompute Your Consumption Trend\ntotal + bars for selected\nperiod and anchor"]:::bw
+    I --> L{"Consumption\nperiod?"}:::bw
+    L -- "Day" --> L1["Build 24 hourly bars"]:::bw --> M
+    L -- "Week" --> L2["Build 7 daily bars"]:::bw --> M
+    L -- "Month" --> L3["Build weekly bars\nin the month"]:::bw --> M
+    L -- "Year" --> L4["Build 12 monthly bars"]:::bw --> M
+    M["Show consumption total\n(kWh or Php) + chart +\nRefresh control"]:::bw --> E
+
+    E -- "Tap Refresh" --> N["Re-fetch live + history\n(loading spinner)"]:::bw --> I
+
+    E -- "Comparison: Week /\nMonth / Year chip" --> C1["Set comparePeriod\nindependently; reset\ncompareAnchor to today"]:::bw --> C2
+    E -- "Comparison: ‹ / ›\ndate arrows" --> C3{"Would next compare\nperiod go into future?"}:::bw
+    C3 -- "Yes (disabled)" --> D
+    C3 -- "No" --> C4["Shift compareAnchor\nby one compare period"]:::bw --> C2
+
+    C2["Build Analytics snapshot for\ncomparePeriod + compareAnchor\n(this period vs previous)"]:::bw
+    C2 --> C5{"Enough history to\nunlock comparison?"}:::bw
+    C5 -- "No" --> C6["Show Comparison Trend with\nempty/zero bars and unlock\nhinting (no data yet)"]:::bw --> E
+    C5 -- "Yes" --> C7["Show Comparison Trend:\ndelta line (e.g. vs last week),\ngrouped this-vs-last chart"]:::bw --> E
+
+    E -- "Tap Energy saving\nNews & Tips card" --> O{"Article has an\nexternal link?"}:::bw
+    O -- "Yes" --> Z2(["Open link in browser"]):::bw
+    O -- "No" --> Z3(["Go to Tips & News tab"]):::bw
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

@@ -1,0 +1,49 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Open Analytics Tab"]):::bw
+    B["Load home device list,\nlive kWh, and usage history\nfor every device"]:::bw
+    C["Default to Week period,\nkWh unit, anchor = today"]:::bw
+    D["Display title, dismissible rate\nbanner, kWh/Php unit toggle"]:::bw
+    E{"User taps"}:::bw
+
+    A --> B --> C --> D --> E
+
+    E -- "Tap X on rate banner" --> F["Hide rate banner"]:::bw --> D
+    E -- "Tap 'Settings' link\nin rate banner" --> Z1(["Go to Settings tab"]):::bw
+    E -- "Tap kWh / Php\nunit toggle" --> G["Switch display unit for\ntotal, chart and comparison"]:::bw --> D
+
+    E -- "Tap Day / Week / Month /\nYear period chip" --> H["Set period, reset\nanchor to today"]:::bw --> I
+    E -- "Tap ‹ previous /\n› next date arrow" --> J{"Would next period\ngo into the future?"}:::bw
+    J -- "Yes (next disabled)" --> D
+    J -- "No" --> K["Shift anchor back/forward\nby one period"]:::bw --> I
+
+    I["Recompute consumption total\nand bars for selected\nperiod and anchor date"]:::bw
+    I --> L{"Which period\nis selected?"}:::bw
+    L -- "Day" --> L1["Build 24 hourly bars\nfor the anchor day"]:::bw --> M
+    L -- "Week" --> L2["Build 7 daily bars,\nMon to Sun"]:::bw --> M
+    L -- "Month" --> L3["Build weekly bars (W1-W6)\noverlapping the anchor month"]:::bw --> M
+    L -- "Year" --> L4["Build 12 monthly bars,\nJan to Dec"]:::bw --> M
+
+    M["Show period total (kWh or Php)\nand 'Your Consumption Trend' chart"]:::bw
+    M --> E
+
+    E -- "Tap Refresh button" --> N["Re-fetch live + history\nfrom database (loading spinner)"]:::bw --> I
+
+    E -- "Tap Energy saving\nNews & Tips card" --> O{"Article has an\nexternal link?"}:::bw
+    O -- "Yes" --> Z2(["Open link in browser"]):::bw
+    O -- "No" --> Z3(["Go to Tips & News tab"]):::bw
+
+    D --> P{"Last week has any\nrecorded kWh?\n(hasComparison)"}:::bw
+    P -- "No" --> Q["Show 'Your Comparison Trend':\nplaceholder Mon-Sun chart (zero)\nwith 'No comparison data yet' overlay"]:::bw
+    P -- "Yes" --> R["Show 'Your Comparison Trend':\nWeekly/Monthly/Yearly chips\n(only Weekly is wired),\nThis Week total, legend,\nand paired bar chart:\nThis Week vs Last Week (Mon-Sun)"]:::bw
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

@@ -1,0 +1,49 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Open Electricity\nRate screen"]):::bw
+    B["Load current provider/rate,\nset draft mode\n(provider or custom)"]:::bw
+    C{"Draft mode?"}:::bw
+
+    A --> B --> C
+    C -- "Provider" --> D["Show selected provider name\n+ 'Select other provider'"]:::bw
+    C -- "Custom" --> E["Show editable ₱/kWh\nnumber field\n+ 'Select other provider'"]:::bw
+
+    D --> F{"User taps"}:::bw
+    E --> F
+
+    F -- "Tap provider row /\n'Select other provider'" --> G["Open Provider\nSelect Modal"]:::bw
+    G --> H{"User selects"}:::bw
+    H -- "Choose 'Custom'" --> I["Switch draft mode\nto Custom"]:::bw --> E
+    H -- "Choose a provider\n(e.g. Meralco)" --> Z1(["Go to Confirm\nElectricity Rate"]):::bw
+
+    F -- "Edit rate number\n(custom mode)" --> E
+
+    F -- "Tap 'Change Electricity\nRate' button" --> J{"Draft mode?"}:::bw
+    J -- "Provider" --> G
+    J -- "Custom" --> K{"Rate entered is\na valid number > 0?"}:::bw
+    K -- "No" --> L["Alert: 'Invalid rate —\nenter a value greater\nthan 0'"]:::bw --> E
+    K -- "Yes" --> Z1
+
+    D --> M["Show FAQ list:\nwhy Meralco default, how to\nfind your rate, accuracy note"]:::bw
+    E --> M
+
+    Z1 --> N["Show highlight:\nprovider/custom rate,\nverification checklist"]:::bw
+    N --> O["Check 'I've verified that this\nrate matches my bill'"]:::bw
+    O --> P{"Checkbox checked?"}:::bw
+    P -- "No" --> Q["'Save New Rate'\nbutton disabled"]:::bw --> O
+    P -- "Yes" --> R{"Tap 'Save\nNew Rate'"}:::bw
+    R --> S["Save rate + provider to\nFirebase with rate history"]:::bw
+    S --> T{"Save\nsuccessful?"}:::bw
+    T -- "Yes" --> U["Alert: 'Rate saved'"]:::bw --> V(["Return to Electricity\nRate screen (updated)"]):::bw
+    T -- "No" --> W["Alert: 'Save failed'"]:::bw --> O
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

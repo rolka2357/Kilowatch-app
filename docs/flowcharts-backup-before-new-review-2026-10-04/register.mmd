@@ -1,0 +1,34 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start"]):::bw
+    B["Display Register Screen\n(Name, Email, Password,\nConfirm Password, Terms checkbox)"]:::bw
+    C{"User taps"}:::bw
+    D{"Name, Email, Password,\nConfirm Password valid AND\nTerms accepted?"}:::bw
+    E["Show inline field error(s)\n(name too short / invalid email /\nweak password / passwords do not\nmatch / terms not accepted)"]:::bw
+    F["Call Firebase\ncreateUserWithEmailAndPassword"]:::bw
+    G{"Account created\nsuccessfully?"}:::bw
+    H["Determine error message\n(Email already registered /\nInvalid email / Weak password /\nNetwork error / Other)"]:::bw
+    I["Display error message"]:::bw
+    J["Save user profile to\nRealtime Database\n(users/{uid}, emailIndex)"]:::bw
+    K["Show 'Registration successful'"]:::bw
+    L(["Proceed to Onboarding /\nMain App"]):::bw
+    M(["Go to Login Screen"]):::bw
+
+    A --> B --> C
+    C -- "Tap Log In" --> M
+    C -- "Tap Register Account" --> D
+    D -- "No" --> E --> B
+    D -- "Yes" --> F --> G
+    G -- "No" --> H --> I --> B
+    G -- "Yes" --> J --> K --> L
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

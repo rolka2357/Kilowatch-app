@@ -1,0 +1,38 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: History Tab\n(hasGoal = true)"]):::bw
+    B["Show promo card:\n'Log your bill'"]:::bw
+    B -- "Tap" --> Z1(["Go to Log Bill screen"]):::bw
+
+    A --> B --> C{"Has an actual bill\nbeen logged this period?"}:::bw
+    C -- "Yes" --> D["Show 'This period's bill':\nactual bill, KiloWatch estimate,\ncoverage %"]:::bw
+    C -- "No" --> E["Skip bill summary card"]:::bw
+
+    D --> F["Show current billing\nperiod range and Week List\n(all weeks with saved status)"]:::bw
+    E --> F
+
+    F --> G{"Does a previous\nbilling period exist?"}:::bw
+    G -- "Yes" --> H["Show previous period summary:\ntotal set aside, actual bill\n(or 'Not logged'), coverage %"]:::bw
+    G -- "No" --> I["Show zeroed summary +\n'No data for previous period'\nor 'summary appears after\nthis cycle ends'"]:::bw
+
+    Z1 --> J["Open Log Bill screen"]:::bw
+    J --> K["Show KiloWatch estimate\nand total set aside so far"]:::bw
+    K --> L["Enter actual bill amount\n(pre-filled if already logged)"]:::bw
+    L --> M{"Tap 'Save Bill' /\n'Update Bill'"}:::bw
+    M --> N{"Can edit?"}:::bw
+    N -- "No" --> O["Alert: 'View only —\nAsk the home owner for\nEditor access'"]:::bw --> L
+    N -- "Yes" --> P{"Amount entered\nis greater than 0?"}:::bw
+    P -- "No" --> Q["Alert: 'Enter your bill —\ntype the total from your\nelectricity bill'"]:::bw --> L
+    P -- "Yes" --> R["Save bill log to Firebase\n(period snapshot: actual bill,\nestimate, set aside, goal)"]:::bw
+    R --> S(["Return to History Tab\n(bill summary updates)"]):::bw
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

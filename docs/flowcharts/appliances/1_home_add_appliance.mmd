@@ -1,0 +1,45 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Open Appliances Tab"]):::bw
+    B["Load rooms, appliances,\ndevices and live kWh data"]:::bw
+    C["Display Dashboard (today kWh\nand cost) + Room cards + Tips/News"]:::bw
+    D{"User taps"}:::bw
+
+    A --> B --> C --> D
+
+    D -- "Tap Room Card" --> E(["Go to Room Details"]):::bw
+    D -- "Tap News/Tip card" --> F(["Open linked article"]):::bw
+
+    D -- "Tap + Add Appliance\n(Editor access only)" --> G["Scan / Enter Device\nIdentifier (QR code)"]:::bw
+    G --> H{"Identifier available and\nnot already claimed?"}:::bw
+    H -- "No" --> H1["Show error message"]:::bw --> G
+    H -- "Yes" --> I["Connect Wi-Fi screen:\nselect 2.4GHz network,\nenter password"]:::bw
+    I --> J["Tap Connect"]:::bw
+    J --> K["Connecting screen:\nTuya pairing (up to ~90s)"]:::bw
+    K --> L{"Pairing\nsuccessful?"}:::bw
+    L -- "No" --> L1["Show pairing error"]:::bw --> I
+    L -- "Yes" --> M["Success screen"]:::bw
+    M --> N["Tap Continue"]:::bw
+    N --> O["Enter Appliance Details:\nappliance name + room/location"]:::bw
+    O --> P{"Name and location\nboth filled in?"}:::bw
+    P -- "No" --> P1["Show error message"]:::bw --> O
+    P -- "Yes" --> Q["Save new room + appliance,\nlink device in database"]:::bw
+    Q --> R(["Close wizard, return to\nAppliances Home (new room visible)"]):::bw
+
+    G -. "Tap Close (X) at any step" .-> S["Stop Tuya pairing"]:::bw
+    I -. "Tap Close (X)" .-> S
+    K -. "Tap Cancel" .-> S
+    M -. "Tap Close (X)" .-> S
+    O -. "Tap Close (X)" .-> S
+    S --> T(["Return to Appliances Home"]):::bw
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

@@ -1,0 +1,20 @@
+{
+  "name": "kilowatch-backend",
+  "version": "1.0.0",
+  "description": "Kilowatch monitoring service: polls Tuya Cloud for smart plug power data and writes realtime kWh + history rollups to Firebase Realtime Database. Runs 24/7 independently of the mobile app.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "selftest": "node scripts/selfTestHousehold.js",
+    "test-push": "node scripts/sendTestPush.js",
+    "test:kilosave": "node scripts/testKilosaveReminderLogic.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@tuya/tuya-connector-nodejs": "^2.1.2",
+    "dotenv": "^16.4.5",
+    "firebase-admin": "^12.7.0"
+  }
+}

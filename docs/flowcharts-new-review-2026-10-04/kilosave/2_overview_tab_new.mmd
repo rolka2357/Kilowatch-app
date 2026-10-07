@@ -1,0 +1,52 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Overview Tab\n(hasGoal = true)"]):::bw
+    B["Show circular progress ring:\n₱ saved so far vs monthly goal"]:::bw
+    C["Show Remaining + Target Goal;\nnote: 'Target goal is locked\nfor this billing period'\n(while period active)"]:::bw
+
+    A --> B --> C --> F
+
+    F{"Has the 4-week\nbilling period ended?"}:::bw
+
+    F -- "Yes" --> G["Show 'This billing period\nhas ended' card"]:::bw
+    G --> H{"Can edit?"}:::bw
+    H -- "Yes" --> I["Show 'Start a new period'\n--> Set Budget Goal\n(new period + optional\nnew target)"]:::bw
+    H -- "No" --> J["No action available"]:::bw
+
+    F -- "No" --> K{"Has this week's\nset-aside been saved?"}:::bw
+
+    K -- "Yes" --> L["Show success banner:\n'Well Done! You've set\naside your first money...'"]:::bw
+    L --> M["Show placeholder:\n'Next week's set aside\nreminder will show here'"]:::bw
+    M --> N["Optional 'How does this\nhelp me?' info"]:::bw
+
+    K -- "No" --> O{"Reminder window open?\n(mid-week / missed catch-up\nfrom backend FCM logic)"}:::bw
+
+    O -- "Yes" --> P["Show reminder card:\nthis week OR missed week\ncatch-up amount"]:::bw
+    P --> Q{"Can edit?"}:::bw
+    Q -- "Yes" --> R["Tap 'Set Aside Money'\nor 'Catch up now'"]:::bw --> Z2(["Go to Set Aside\nMoney screen"]):::bw
+    Q -- "No" --> S["Button hidden"]:::bw
+
+    O -- "No" --> T["Show early placeholder /\n'How does this help?'\n(+ optional early set-aside\nif canEdit)"]:::bw
+    T -- "Tap early link" --> Z2
+
+    F --> U{"Streak > 1 week\nin a row?"}:::bw
+    U -- "Yes" --> V["Show flame streak box"]:::bw
+    U -- "No" --> W["No streak box"]:::bw
+
+    V --> X["Show Week List:\nweeks in billing period with\nsaved/pending + amounts"]:::bw
+    W --> X
+    G --> X
+    L --> X
+    P --> X
+    T --> X
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

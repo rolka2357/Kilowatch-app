@@ -1,0 +1,33 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: News Tab selected"]):::bw
+    B["Subscribe to content/news\nin Firebase"]:::bw
+    C{"Active news items\nexist in database?"}:::bw
+
+    A --> B --> C
+    C -- "Yes" --> D["Show database news list\n(sorted by order)"]:::bw
+    C -- "No / error" --> E["Show fallback\nmock news list"]:::bw
+
+    D --> F["Show dismissible rate banner:\n'Need to change your rate?\nUpdate it in Settings'"]:::bw
+    E --> F
+
+    F --> G{"User taps"}:::bw
+    G -- "Tap X on banner" --> H["Hide rate banner"]:::bw --> F
+    G -- "Tap 'Settings' link" --> Z1(["Go to Settings tab\n(Settings Home)"]):::bw
+
+    F --> I["Show 'Energy saving\nNews & Tips' heading\nand list of news cards\n(image, title, description)"]:::bw
+    I --> J{"User taps\na news card"}:::bw
+    J --> K{"Card has an\nexternal link?"}:::bw
+    K -- "Yes" --> Z2(["Open link in\ndevice browser"]):::bw
+    K -- "No" --> L["No action\n(informational only)"]:::bw
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

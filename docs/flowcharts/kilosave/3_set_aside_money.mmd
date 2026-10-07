@@ -1,0 +1,36 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Open Set\nAside Money screen"]):::bw
+    B["Show amount to transfer\n(this week's set-aside)\nand 'why set this aside?' note"]:::bw
+    C["Show savings options list:\nGSave, GoSave, Maya Savings,\nMariBank, Save on my own"]:::bw
+    D{"User taps\nan option"}:::bw
+
+    A --> B --> C --> D
+
+    D -- "GSave / GoSave /\nMaya / MariBank" --> E["Attempt to open\nexternal app via deep link"]:::bw
+    E --> F{"App opened\nsuccessfully?"}:::bw
+    F -- "No" --> G["Alert: 'Couldn't open app —\nopen manually then tap\nLog Save'"]:::bw --> C
+    F -- "Yes" --> H{"Already saved\nthis week?"}:::bw
+    H -- "Yes" --> C
+    H -- "No" --> I["Ask: 'Mark as saved?\nDid you transfer ₱X?'"]:::bw
+    I -- "Not yet" --> C
+    I -- "Yes, log it" --> J
+
+    D -- "Save on my own\n(manual)" --> K{"Already saved\nthis week?"}:::bw
+    K -- "Yes" --> L["Alert: 'Already logged'"]:::bw --> C
+    K -- "No" --> J
+
+    J["Log week set-aside to Firebase\n(amount, via method, period key)"]:::bw
+    J --> M["Alert: '₱X marked as\nsaved for this week'"]:::bw
+    M --> Z1(["Return to KiloSave Home\n(Overview refreshes)"]):::bw
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

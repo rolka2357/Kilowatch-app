@@ -1,0 +1,944 @@
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build.gradle b/node_modules/@owowagency/react-native-tuya/android/build.gradle
+index e148e50..b8dfdb3 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/build.gradle
++++ b/node_modules/@owowagency/react-native-tuya/android/build.gradle
+@@ -1,32 +1,12 @@
+ apply plugin: 'com.android.library'
+ apply plugin: 'kotlin-android'
+-apply plugin: 'maven-publish'
+-
+-
+-buildscript {
+-    ext.kotlin_version = '1.7.20'
+-    repositories {
+-        jcenter()
+-        google()
+-    }
+-
+-    dependencies {
+-        classpath 'com.android.tools.build:gradle:7.0.0'
+-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+-    }
+-}
+-
+ 
+ android {
+-    compileSdkVersion 31
++    namespace 'com.tuya.smart.rnsdk'
++    compileSdkVersion 35
+ 
+     defaultConfig {
+-        minSdkVersion 23
+-        targetSdkVersion 25
+-        versionCode 1
+-        versionName "1.0"
+-
+-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
++        minSdkVersion 24
+ 
+         ndk {
+             abiFilters "armeabi-v7a","arm64-v8a"
+@@ -45,8 +25,11 @@ android {
+     }
+ 
+     compileOptions {
+-      sourceCompatibility JavaVersion.VERSION_1_8
+-      targetCompatibility JavaVersion.VERSION_1_8
++      sourceCompatibility JavaVersion.VERSION_17
++      targetCompatibility JavaVersion.VERSION_17
++    }
++    kotlinOptions {
++      jvmTarget = "17"
+     }
+ }
+ 
+@@ -60,7 +43,6 @@ dependencies {
+     implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.6.0'
+     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
+     implementation 'com.thingclips.smart:thingsmart:5.11.3'
+-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+     implementation 'com.facebook.react:react-native:+'
+     implementation 'de.greenrobot:eventbus:2.4.0'
+     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+@@ -80,17 +62,3 @@ repositories {
+     maven { url 'https://jitpack.io' }
+ }
+ 
+-allprojects {
+-  repositories {
+-    exclusiveContent {
+-      filter {
+-        includeGroup "com.facebook.react"
+-      }
+-      forRepository {
+-        maven {
+-          url "$rootDir/../node_modules/react-native/android"
+-        }
+-      }
+-    }
+-  }
+-}
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/generated/source/buildConfig/debug/com/tuya/smart/rnsdk/BuildConfig.java b/node_modules/@owowagency/react-native-tuya/android/build/generated/source/buildConfig/debug/com/tuya/smart/rnsdk/BuildConfig.java
+new file mode 100644
+index 0000000..8ecaf0b
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/generated/source/buildConfig/debug/com/tuya/smart/rnsdk/BuildConfig.java
+@@ -0,0 +1,10 @@
++/**
++ * Automatically generated file. DO NOT MODIFY
++ */
++package com.tuya.smart.rnsdk;
++
++public final class BuildConfig {
++  public static final boolean DEBUG = Boolean.parseBoolean("true");
++  public static final String LIBRARY_PACKAGE_NAME = "com.tuya.smart.rnsdk";
++  public static final String BUILD_TYPE = "debug";
++}
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/AndroidManifest.xml b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/AndroidManifest.xml
+new file mode 100644
+index 0000000..e992b53
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/AndroidManifest.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.tuya.smart.rnsdk" >
++
++    <uses-sdk android:minSdkVersion="24" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/output-metadata.json b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/output-metadata.json
+new file mode 100644
+index 0000000..287fd79
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/output-metadata.json
+@@ -0,0 +1,18 @@
++{
++  "version": 3,
++  "artifactType": {
++    "type": "AAPT_FRIENDLY_MERGED_MANIFESTS",
++    "kind": "Directory"
++  },
++  "applicationId": "com.tuya.smart.rnsdk",
++  "variantName": "debug",
++  "elements": [
++    {
++      "type": "SINGLE",
++      "filters": [],
++      "attributes": [],
++      "outputFile": "AndroidManifest.xml"
++    }
++  ],
++  "elementType": "File"
++}
+\ No newline at end of file
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/aar_metadata/debug/writeDebugAarMetadata/aar-metadata.properties b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/aar_metadata/debug/writeDebugAarMetadata/aar-metadata.properties
+new file mode 100644
+index 0000000..1211b1e
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/aar_metadata/debug/writeDebugAarMetadata/aar-metadata.properties
+@@ -0,0 +1,6 @@
++aarFormatVersion=1.0
++aarMetadataVersion=1.0
++minCompileSdk=1
++minCompileSdkExtension=0
++minAndroidGradlePluginVersion=1.0.0
++coreLibraryDesugaringEnabled=false
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/annotation_processor_list/debug/javaPreCompileDebug/annotationProcessors.json b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/annotation_processor_list/debug/javaPreCompileDebug/annotationProcessors.json
+new file mode 100644
+index 0000000..9e26dfe
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/annotation_processor_list/debug/javaPreCompileDebug/annotationProcessors.json
+@@ -0,0 +1 @@
++{}
+\ No newline at end of file
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/compile_r_class_jar/debug/generateDebugRFile/R.jar b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/compile_r_class_jar/debug/generateDebugRFile/R.jar
+new file mode 100644
+index 0000000..383c86f
+Binary files /dev/null and b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/compile_r_class_jar/debug/generateDebugRFile/R.jar differ
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/compile_symbol_list/debug/generateDebugRFile/R.txt b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/compile_symbol_list/debug/generateDebugRFile/R.txt
+new file mode 100644
+index 0000000..a9551e5
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/compile_symbol_list/debug/generateDebugRFile/R.txt
+@@ -0,0 +1 @@
++int string app_name 0x0
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+new file mode 100644
+index 0000000..1cd7c53
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+@@ -0,0 +1 @@
++#Sat Jul 18 17:18:06 CST 2026
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/debug/packageDebugResources/merged.dir/values/values.xml b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/debug/packageDebugResources/merged.dir/values/values.xml
+new file mode 100644
+index 0000000..b452ba0
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/debug/packageDebugResources/merged.dir/values/values.xml
+@@ -0,0 +1,4 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <string name="app_name">tuyasmart-sdk-react-native</string>
++</resources>
+\ No newline at end of file
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+new file mode 100644
+index 0000000..2861cae
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\res"><file path="C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\res\values\strings.xml" qualifiers=""><string name="app_name">tuyasmart-sdk-react-native</string></file></source></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\debug\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\debug\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\build\generated\res\resValues\debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\build\generated\res\resValues\debug"/></dataSet><mergedItems/></merger>
+\ No newline at end of file
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/mergeDebugAssets/merger.xml b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/mergeDebugAssets/merger.xml
+new file mode 100644
+index 0000000..18e763d
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/mergeDebugAssets/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\assets"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\debug\assets"/></dataSet><dataSet config="generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\build\intermediates\shader_assets\debug\compileDebugShaders\out"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml
+new file mode 100644
+index 0000000..c3b38de
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\jniLibs"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\debug\jniLibs"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/mergeDebugShaders/merger.xml b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/mergeDebugShaders/merger.xml
+new file mode 100644
+index 0000000..c47238a
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/incremental/mergeDebugShaders/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\shaders"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\debug\shaders"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/local_only_symbol_list/debug/parseDebugLocalResources/R-def.txt b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/local_only_symbol_list/debug/parseDebugLocalResources/R-def.txt
+new file mode 100644
+index 0000000..34ca0ec
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/local_only_symbol_list/debug/parseDebugLocalResources/R-def.txt
+@@ -0,0 +1,3 @@
++R_DEF: Internal format may change without notice
++local
++string app_name
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/manifest_merge_blame_file/debug/processDebugManifest/manifest-merger-blame-debug-report.txt b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/manifest_merge_blame_file/debug/processDebugManifest/manifest-merger-blame-debug-report.txt
+new file mode 100644
+index 0000000..1855e74
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/manifest_merge_blame_file/debug/processDebugManifest/manifest-merger-blame-debug-report.txt
+@@ -0,0 +1,7 @@
++1<?xml version="1.0" encoding="utf-8"?>
++2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++3    package="com.tuya.smart.rnsdk" >
++4
++5    <uses-sdk android:minSdkVersion="24" />
++6
++7</manifest>
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml
+new file mode 100644
+index 0000000..e992b53
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.tuya.smart.rnsdk" >
++
++    <uses-sdk android:minSdkVersion="24" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/navigation_json/debug/extractDeepLinksDebug/navigation.json b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/navigation_json/debug/extractDeepLinksDebug/navigation.json
+new file mode 100644
+index 0000000..0637a08
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/navigation_json/debug/extractDeepLinksDebug/navigation.json
+@@ -0,0 +1 @@
++[]
+\ No newline at end of file
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/nested_resources_validation_report/debug/generateDebugResources/nestedResourcesValidationReport.txt b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/nested_resources_validation_report/debug/generateDebugResources/nestedResourcesValidationReport.txt
+new file mode 100644
+index 0000000..08f4ebe
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/nested_resources_validation_report/debug/generateDebugResources/nestedResourcesValidationReport.txt
+@@ -0,0 +1 @@
++0 Warning/Error
+\ No newline at end of file
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/packaged_res/debug/packageDebugResources/values/values.xml b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/packaged_res/debug/packageDebugResources/values/values.xml
+new file mode 100644
+index 0000000..b452ba0
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/packaged_res/debug/packageDebugResources/values/values.xml
+@@ -0,0 +1,4 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <string name="app_name">tuyasmart-sdk-react-native</string>
++</resources>
+\ No newline at end of file
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/intermediates/symbol_list_with_package_name/debug/generateDebugRFile/package-aware-r.txt b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/symbol_list_with_package_name/debug/generateDebugRFile/package-aware-r.txt
+new file mode 100644
+index 0000000..7468b53
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/intermediates/symbol_list_with_package_name/debug/generateDebugRFile/package-aware-r.txt
+@@ -0,0 +1,2 @@
++com.tuya.smart.rnsdk
++string app_name
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/kotlin/compileDebugKotlin/cacheable/dirty-sources.txt b/node_modules/@owowagency/react-native-tuya/android/build/kotlin/compileDebugKotlin/cacheable/dirty-sources.txt
+new file mode 100644
+index 0000000..98a35ef
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/kotlin/compileDebugKotlin/cacheable/dirty-sources.txt
+@@ -0,0 +1,25 @@
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\push\TuyaPushModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\utils\JsonUtils.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\timer\TuyaTimerModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\utils\Constant.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\home\TuyaHomeDataManagerModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\TuyaReactPackage.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\device\TuyaSingleTransferModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\share\TuyaShareModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\home\TuyaRoomModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\scene\TuyaSceneModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\device\TuyaGatewayModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\core\TuyaCoreModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\utils\BridgeUtils.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\user\TuyaUserModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\device\TuyaDeviceModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\home\TuyaHomeManagerModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\home\TuyaHomeModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\group\TuyaGroupModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\utils\TuyaReactUtils.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\message\TuyaMessageModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\activator\TuyaActivatorModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\feedback\TuyaFeedBackModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\home\TuyaHomeMemberModule.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\utils\ReactParamsCheck.kt
++C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\java\com\tuya\smart\rnsdk\device\TuyaOTAModule.kt
+\ No newline at end of file
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/kotlin/compileDebugKotlin/local-state/build-history.bin b/node_modules/@owowagency/react-native-tuya/android/build/kotlin/compileDebugKotlin/local-state/build-history.bin
+new file mode 100644
+index 0000000..2f71b26
+Binary files /dev/null and b/node_modules/@owowagency/react-native-tuya/android/build/kotlin/compileDebugKotlin/local-state/build-history.bin differ
+diff --git a/node_modules/@owowagency/react-native-tuya/android/build/outputs/logs/manifest-merger-debug-report.txt b/node_modules/@owowagency/react-native-tuya/android/build/outputs/logs/manifest-merger-debug-report.txt
+new file mode 100644
+index 0000000..71f503f
+--- /dev/null
++++ b/node_modules/@owowagency/react-native-tuya/android/build/outputs/logs/manifest-merger-debug-report.txt
+@@ -0,0 +1,16 @@
++-- Merging decision tree log ---
++manifest
++ADDED from C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\AndroidManifest.xml:1:1-72
++INJECTED from C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\AndroidManifest.xml:1:1-72
++	package
++		INJECTED from C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\AndroidManifest.xml
++	xmlns:android
++		ADDED from C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\AndroidManifest.xml:1:11-69
++uses-sdk
++INJECTED from C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\AndroidManifest.xml reason: use-sdk injection requested
++INJECTED from C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\AndroidManifest.xml
++INJECTED from C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\AndroidManifest.xml
++	android:targetSdkVersion
++		INJECTED from C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\AndroidManifest.xml
++	android:minSdkVersion
++		INJECTED from C:\Users\lenovo\Documents\Kilowatch App\kilowatch-app\node_modules\@owowagency\react-native-tuya\android\src\main\AndroidManifest.xml
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/AndroidManifest.xml b/node_modules/@owowagency/react-native-tuya/android/src/main/AndroidManifest.xml
+index 9012a75..94cbbcf 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/AndroidManifest.xml
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/AndroidManifest.xml
+@@ -1,2 +1 @@
+-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+-    package="com.tuya.smart.rnsdk" />
++<manifest xmlns:android="http://schemas.android.com/apk/res/android" />
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/activator/TuyaActivatorModule.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/activator/TuyaActivatorModule.kt
+index 7bb6092..0f1c4ab 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/activator/TuyaActivatorModule.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/activator/TuyaActivatorModule.kt
+@@ -76,13 +76,13 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
+                     }
+ 
+                     override fun onFailure(code: Int, msg: String?, handle: Any?) {
+-                      promise.reject(code.toString(), msg);
++                      promise.reject(code.toString(), msg ?: "");
+                     }
+                   });
+               }
+ 
+               override fun onFailure(s: String, s1: String) {
+-                promise.reject(s, s1);
++                promise.reject(s ?: "ERROR", s1 ?: "");
+               }
+             })
+         }
+@@ -99,12 +99,12 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
+ 
+   @ReactMethod
+   fun openNetworkSettings(params: ReadableMap) {
+-    val currentActivity = currentActivity
+-    if (currentActivity == null) {
++    val activity = reactApplicationContext.currentActivity
++    if (activity == null) {
+       return
+     }
+     try {
+-      currentActivity.startActivity(Intent(Settings.ACTION_SETTINGS))
++      activity.startActivity(Intent(Settings.ACTION_SETTINGS))
+     } catch (e: Exception) {
+     }
+ 
+@@ -128,7 +128,7 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
+ 
+ 
+         override fun onFailure(s: String, s1: String) {
+-          promise.reject(s, s1)
++          promise.reject(s ?: "ERROR", s1 ?: "")
+         }
+       })
+     }
+@@ -148,7 +148,7 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
+         .setTimeOut(params.getInt(TIME).toLong())
+         .setListener(object : IThingSmartActivatorListener {
+           override fun onError(var1: String, var2: String) {
+-            promise.reject(var1, var2)
++            promise.reject(var1 ?: "ERROR", var2 ?: "")
+           }
+ 
+           /**
+@@ -194,7 +194,7 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
+       1006        配网超时
+        */
+       override fun onError(var1: String, var2: String) {
+-        promise.reject(var1, var2)
++        promise.reject(var1 ?: "ERROR", var2 ?: "")
+       }
+ 
+       /**
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/core/TuyaCoreModule.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/core/TuyaCoreModule.kt
+index 3eed5a4..33d9844 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/core/TuyaCoreModule.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/core/TuyaCoreModule.kt
+@@ -99,7 +99,7 @@ class TuyaCoreModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
+             }
+ 
+             override fun onError(errorCode: String?, errorMsg: String?) {
+-                promise.reject(errorCode, errorMsg)
++                promise.reject(errorCode ?: "ERROR", errorMsg ?: "")
+             }
+ 
+         }
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/device/TuyaDeviceModule.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/device/TuyaDeviceModule.kt
+index 30d028a..45c9a14 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/device/TuyaDeviceModule.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/device/TuyaDeviceModule.kt
+@@ -168,7 +168,7 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
+ 
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+         }
+     }
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/device/TuyaOTAModule.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/device/TuyaOTAModule.kt
+index bee2dcc..113324d 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/device/TuyaOTAModule.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/device/TuyaOTAModule.kt
+@@ -28,7 +28,7 @@ class TuyaOTAModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
+                 }
+ 
+                override fun onFailure(code: String, error: String){
+-                    promise.reject(code,error)
++                    promise.reject(code ?: "ERROR", error ?: "")
+                 }
+             })
+         }
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/feedback/TuyaFeedBackModule.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/feedback/TuyaFeedBackModule.kt
+index 0c6bee7..47b3324 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/feedback/TuyaFeedBackModule.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/feedback/TuyaFeedBackModule.kt
+@@ -28,7 +28,7 @@ class TuyaFeedBackModule(reactContext: ReactApplicationContext) : ReactContextBa
+             }
+ 
+             override fun onError(var1: String, var2: String) {
+-                promise.reject(var1, var2)
++                promise.reject(var1 ?: "ERROR", var2 ?: "")
+             }
+         })
+     }
+@@ -43,7 +43,7 @@ class TuyaFeedBackModule(reactContext: ReactApplicationContext) : ReactContextBa
+             }
+ 
+             override fun onError(var1: String, var2: String) {
+-                promise.reject(var1, var2)
++                promise.reject(var1 ?: "ERROR", var2 ?: "")
+             }
+         })
+     }
+@@ -61,7 +61,7 @@ class TuyaFeedBackModule(reactContext: ReactApplicationContext) : ReactContextBa
+                         }
+ 
+                         override fun onError(var1: String, var2: String) {
+-                            promise.reject(var1, var2)
++                            promise.reject(var1 ?: "ERROR", var2 ?: "")
+                         }
+                     })
+         }
+@@ -80,7 +80,7 @@ class TuyaFeedBackModule(reactContext: ReactApplicationContext) : ReactContextBa
+                                 }
+ 
+                                 override fun onError(var1: String, var2: String) {
+-                                    promise.reject(var1, var2)
++                                    promise.reject(var1 ?: "ERROR", var2 ?: "")
+                                 }
+                             })
+         }
+@@ -99,7 +99,7 @@ class TuyaFeedBackModule(reactContext: ReactApplicationContext) : ReactContextBa
+                                 }
+ 
+                                 override fun onError(var1: String, var2: String) {
+-                                    promise.reject(var1, var2)
++                                    promise.reject(var1 ?: "ERROR", var2 ?: "")
+                                 }
+                             })
+         }
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/group/TuyaGroupModule.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/group/TuyaGroupModule.kt
+index 54da2df..c2ad8f2 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/group/TuyaGroupModule.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/group/TuyaGroupModule.kt
+@@ -39,7 +39,7 @@ class TuyaGroupModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                                 }
+ 
+                                 override fun onError(p0: String?, p1: String?) {
+-                                    promise.reject(p0,p1)
++                                    promise.reject(p0 ?: "ERROR", p1 ?: "")
+                                 }
+                             }
+                     )
+@@ -59,7 +59,7 @@ class TuyaGroupModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                 }
+ 
+                 override fun onError(errorCode: String, errorMsg: String) {
+-                    promise.reject(errorCode,errorMsg)
++                    promise.reject(errorCode ?: "ERROR", errorMsg ?: "")
+                 }
+             })
+         }
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/home/TuyaHomeManagerModule.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/home/TuyaHomeManagerModule.kt
+index 3f768e6..d46995a 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/home/TuyaHomeManagerModule.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/home/TuyaHomeManagerModule.kt
+@@ -25,7 +25,7 @@ class TuyaHomeManagerModule(reactContext: ReactApplicationContext) : ReactContex
+             }
+ 
+             override fun onError(var1: String, var2: String) {
+-                promise.reject(var1, var2)
++                promise.reject(var1 ?: "ERROR", var2 ?: "")
+             }
+         })
+     }
+@@ -128,7 +128,7 @@ class TuyaHomeManagerModule(reactContext: ReactApplicationContext) : ReactContex
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+         }
+     }
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/home/TuyaHomeMemberModule.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/home/TuyaHomeMemberModule.kt
+index d81fd69..8976a79 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/home/TuyaHomeMemberModule.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/home/TuyaHomeMemberModule.kt
+@@ -30,7 +30,7 @@ class TuyaHomeMemberModule(reactContext: ReactApplicationContext) : ReactContext
+                         }
+ 
+                         override fun onError(var1: String, var2: String){
+-                            promise.reject(var1,var2)
++                            promise.reject(var1 ?: "ERROR", var2 ?: "")
+                         }
+                     }
+             )
+@@ -61,7 +61,7 @@ class TuyaHomeMemberModule(reactContext: ReactApplicationContext) : ReactContext
+                 }
+ 
+                 override fun onError(var1: String, var2: String){
+-                    promise.reject(var1,var2)
++                    promise.reject(var1 ?: "ERROR", var2 ?: "")
+                 }
+             })
+         }
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/home/TuyaHomeModule.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/home/TuyaHomeModule.kt
+index e272828..f247f46 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/home/TuyaHomeModule.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/home/TuyaHomeModule.kt
+@@ -130,7 +130,7 @@ class TuyaHomeModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
+                         }
+ 
+                         override fun onError(var1: String, var2: String) {
+-                            promise.reject(var1, var2)
++                            promise.reject(var1 ?: "ERROR", var2 ?: "")
+                         }
+                     }
+             )
+@@ -205,7 +205,7 @@ class TuyaHomeModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
+                         }
+ 
+                         override fun onError(var1: String, var2: String) {
+-                            promise.reject(var1, var2)
++                            promise.reject(var1 ?: "ERROR", var2 ?: "")
+                         }
+                     }
+             )
+@@ -233,7 +233,7 @@ class TuyaHomeModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+         }
+     }
+@@ -246,7 +246,7 @@ class TuyaHomeModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+         }
+     }
+@@ -258,7 +258,7 @@ class TuyaHomeModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+         }
+     }
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/message/TuyaMessageModule.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/message/TuyaMessageModule.kt
+index 5cd755d..89a1e28 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/message/TuyaMessageModule.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/message/TuyaMessageModule.kt
+@@ -26,7 +26,7 @@ class TuyaMessageModule(reactContext: ReactApplicationContext) : ReactContextBas
+             }
+ 
+             override fun onError(p0: String?, p1: String?) {
+-                promise.reject(p0,p1)
++                promise.reject(p0 ?: "ERROR", p1 ?: "")
+             }
+         })
+     }
+@@ -45,7 +45,7 @@ class TuyaMessageModule(reactContext: ReactApplicationContext) : ReactContextBas
+                 }
+ 
+                 override fun onError(var1: String, var2: String) {
+-                  promise.reject(var1,var2)
++                  promise.reject(var1 ?: "ERROR", var2 ?: "")
+                 }
+             })
+         }
+@@ -59,7 +59,7 @@ class TuyaMessageModule(reactContext: ReactApplicationContext) : ReactContextBas
+             }
+ 
+             override fun onError(p0: String?, p1: String?) {
+-                promise.reject(p0,p1)
++                promise.reject(p0 ?: "ERROR", p1 ?: "")
+             }
+         })
+     }
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/scene/TuyaSceneModule.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/scene/TuyaSceneModule.kt
+index 78f33e7..231c7f0 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/scene/TuyaSceneModule.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/scene/TuyaSceneModule.kt
+@@ -75,7 +75,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                 }
+ 
+                 override fun onError(var1: String, var2: String) {
+-                    promise.reject(var1, var2)
++                    promise.reject(var1 ?: "ERROR", var2 ?: "")
+                 }
+             })
+         }
+@@ -91,7 +91,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                 }
+ 
+                 override fun onError(var1: String, var2: String) {
+-                    promise.reject(var1, var2)
++                    promise.reject(var1 ?: "ERROR", var2 ?: "")
+                 }
+             })
+         }
+@@ -106,7 +106,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                 }
+ 
+                 override fun onError(var1: String, var2: String) {
+-                    promise.reject(var1, var2)
++                    promise.reject(var1 ?: "ERROR", var2 ?: "")
+                 }
+             })
+         }
+@@ -121,7 +121,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                 }
+ 
+                 override fun onError(var1: String, var2: String) {
+-                    promise.reject(var1, var2)
++                    promise.reject(var1 ?: "ERROR", var2 ?: "")
+                 }
+             })
+         }
+@@ -136,7 +136,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                 }
+ 
+                 override fun onError(var1: String, var2: String) {
+-                    promise.reject(var1, var2)
++                    promise.reject(var1 ?: "ERROR", var2 ?: "")
+                 }
+             })
+         }
+@@ -151,7 +151,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                 }
+ 
+                 override fun onError(var1: String, var2: String) {
+-                    promise.reject(var1, var2)
++                    promise.reject(var1 ?: "ERROR", var2 ?: "")
+                 }
+             })
+         }
+@@ -167,7 +167,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                         }
+ 
+                         override fun onError(var1: String, var2: String) {
+-                            promise.reject(var1, var2)
++                            promise.reject(var1 ?: "ERROR", var2 ?: "")
+                         }
+                     })
+         }
+@@ -190,7 +190,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                         }
+ 
+                         override fun onError(var1: String, var2: String) {
+-                            promise.reject(var1, var2)
++                            promise.reject(var1 ?: "ERROR", var2 ?: "")
+                         }
+                     })
+         }
+@@ -206,7 +206,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                         }
+ 
+                         override fun onError(var1: String, var2: String) {
+-                            promise.reject(var1, var2)
++                            promise.reject(var1 ?: "ERROR", var2 ?: "")
+                         }
+                     }))
+         }
+@@ -241,7 +241,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                         }
+ 
+                         override fun onError(errorCode: String, errorMessage: String) {
+-                            promise.reject(errorCode, errorMessage)
++                            promise.reject(errorCode ?: "ERROR", errorMessage ?: "")
+                         }
+                     })
+         }
+@@ -271,7 +271,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                                                 }
+ 
+                                                 override fun onError(errorCode: String, errorMessage: String) {
+-                                                    promise.reject(errorCode, errorMessage)
++                                                    promise.reject(errorCode ?: "ERROR", errorMessage ?: "")
+                                                 }
+                                             })
+                                     return
+@@ -281,7 +281,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                         }
+ 
+                         override fun onError(code: String?, error: String?) {
+-                            promise.reject(code, error)
++                            promise.reject(code ?: "ERROR", error ?: "")
+                         }
+                     }
+             )
+@@ -379,7 +379,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                         }
+ 
+                         override fun onError(errorCode: String, errorMessage: String) {
+-                            promise.reject(errorCode, errorMessage)
++                            promise.reject(errorCode ?: "ERROR", errorMessage ?: "")
+                         }
+                     })
+         }
+@@ -486,7 +486,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                                                 }
+ 
+                                                 override fun onError(errorCode: String, errorMessage: String) {
+-                                                    promise.reject(errorCode, errorMessage)
++                                                    promise.reject(errorCode ?: "ERROR", errorMessage ?: "")
+                                                 }
+                                             })
+                                     return
+@@ -496,7 +496,7 @@ class TuyaSceneModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                         }
+ 
+                         override fun onError(code: String?, error: String?) {
+-                            promise.reject(code, error)
++                            promise.reject(code ?: "ERROR", error ?: "")
+                         }
+                     }
+             )
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/share/TuyaShareModule.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/share/TuyaShareModule.kt
+index 1962a00..a29e906 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/share/TuyaShareModule.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/share/TuyaShareModule.kt
+@@ -122,7 +122,7 @@ class TuyaShareModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+                         }
+ 
+                         override fun onError(errorCode: String, errorMessage: String) {
+-                            promise.reject(errorCode, errorMessage)
++                            promise.reject(errorCode ?: "ERROR", errorMessage ?: "")
+                         }
+                     })
+         }
+@@ -205,7 +205,7 @@ class TuyaShareModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+             }
+ 
+             override fun onError(p0: String?, p1: String?) {
+-                promise.reject(p0, p1)
++                promise.reject(p0 ?: "ERROR", p1 ?: "")
+             }
+         }
+     }
+@@ -217,7 +217,7 @@ class TuyaShareModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+             }
+ 
+             override fun onError(errorCode: String, errorMessage: String) {
+-                promise.reject(errorCode, errorMessage)
++                promise.reject(errorCode ?: "ERROR", errorMessage ?: "")
+             }
+         }
+     }
+@@ -229,7 +229,7 @@ class TuyaShareModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+             }
+ 
+             override fun onError(errorCode: String, errorMessage: String) {
+-                promise.reject(errorCode, errorMessage)
++                promise.reject(errorCode ?: "ERROR", errorMessage ?: "")
+             }
+         }
+     }
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/timer/TuyaTimerModule.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/timer/TuyaTimerModule.kt
+index 4a7896c..1ea421a 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/timer/TuyaTimerModule.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/timer/TuyaTimerModule.kt
+@@ -158,7 +158,7 @@ class TuyaTimerModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+         }
+     }
+@@ -169,7 +169,7 @@ class TuyaTimerModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+         }
+     }
+@@ -180,7 +180,7 @@ class TuyaTimerModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+         }
+     }
+@@ -192,7 +192,7 @@ class TuyaTimerModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+         }
+     }
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/user/TuyaUserModule.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/user/TuyaUserModule.kt
+index 7465a27..00734a2 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/user/TuyaUserModule.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/user/TuyaUserModule.kt
+@@ -187,7 +187,7 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+ 
+         })
+@@ -318,7 +318,7 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+ 
+         }
+@@ -332,7 +332,7 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+ 
+         }
+@@ -345,7 +345,7 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+ 
+         }
+@@ -358,7 +358,7 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+         }
+     }
+@@ -371,7 +371,7 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+         }
+     }
+diff --git a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/utils/Constant.kt b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/utils/Constant.kt
+index 9375783..178099d 100644
+--- a/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/utils/Constant.kt
++++ b/node_modules/@owowagency/react-native-tuya/android/src/main/java/com/tuya/smart/rnsdk/utils/Constant.kt
+@@ -113,7 +113,7 @@ object Constant {
+             }
+ 
+             override fun onError(code: String?, error: String?) {
+-                promise.reject(code, error)
++                promise.reject(code ?: "ERROR", error ?: "")
+             }
+         }
+     }

@@ -1,0 +1,60 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Enter Usage Limit screen\n(from Appliance Detail, Set Limit)"]):::bw
+    B["Load usage limits for this\nplug, sorted by Php amount"]:::bw
+    C{"Any limits\nsaved?"}:::bw
+    D["Show empty state:\n'No usage limits yet'"]:::bw
+    E["Display list: Php amount, days,\napprox kWh, Notify/Auto-off pills,\nenabled switch per row"]:::bw
+
+    A --> B --> C
+    C -- "No" --> D
+    C -- "Yes" --> E
+
+    D --> F{"User taps"}:::bw
+    E --> F
+
+    F -- "Tap back arrow" --> Z1(["Return to Appliance Detail"]):::bw
+    F -- "Toggle enabled switch\non a row" --> G["Update enabled flag\nin database directly"]:::bw --> E
+    F -- "Tap existing limit row" --> H["Open editor, pre-filled\nwith that limit's values"]:::bw
+    F -- "Tap + Add Usage Limit\n(Editor access only)" --> I["Open editor, default Php\n= current electricity rate"]:::bw
+
+    H --> J["Editor: Php spending limit,\nNotifications toggle,\nAuto turn off toggle,\nRepeat (every day / weekdays)"]:::bw
+    I --> J
+
+    J --> K{"User taps"}:::bw
+    K -- "Cancel / back" --> E
+    K -- "Delete (existing only)" --> L["Confirm alert:\nDelete usage limit?"]:::bw
+    L --> M{"Confirmed?"}:::bw
+    M -- "No" --> J
+    M -- "Yes" --> N["Remove limit\nfrom database"]:::bw --> E
+
+    K -- "Save" --> O{"Limit greater than Php 0,\ndays selected, and at least\none of Notify/Auto-off on?"}:::bw
+    O -- "No" --> O1["Show validation alert"]:::bw --> J
+    O -- "Yes" --> P["Save limit to database\n(resets today's alert guard)"]:::bw --> E
+
+    Q(["Background: Usage Limit Runner\n(checks live cost ~every 20s\nwhile app is open)"]):::bw
+    R{"Today's cost for this\nplug reached the limit?"}:::bw
+    S{"Auto turn off\nenabled?"}:::bw
+    T["Turn plug off automatically"]:::bw
+    U{"Notifications\nenabled?"}:::bw
+    V["Send notification\n(with Turn off now /\nTurn off manually if\nauto-off is disabled)"]:::bw
+    W["No action\n(already handled today)"]:::bw
+
+    Q --> R
+    R -- "Yes, first time today" --> S
+    R -- "No" --> Q
+    S -- "Yes" --> T --> U
+    S -- "No" --> U
+    U -- "Yes" --> V
+    U -- "No" --> W
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

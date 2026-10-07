@@ -1,0 +1,46 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Open People screen"]):::bw
+    B["Load household members\nand pending invites"]:::bw
+    C["Merge into list: Owner first,\nthen members, pending\ninvites last"]:::bw
+    D["Show dismissible tip card:\n'Did you know? Add\nhousehold members...'"]:::bw
+    E{"User taps"}:::bw
+
+    A --> B --> C --> D --> E
+
+    E -- "Tap '+' Add" --> Z1(["Go to Invite\nPerson screen"]):::bw
+
+    E -- "Tap 'Edit'" --> F["Enter editing mode\n(clear selection)"]:::bw
+    F --> G{"User taps"}:::bw
+    G -- "Tap a removable member\n(not owner / not\ninvite-only)" --> H["Toggle member selection"]:::bw --> G
+    G -- "Tap 'Remove selected (N)'" --> I{"At least one\nmember selected?"}:::bw
+    I -- "No" --> G
+    I -- "Yes" --> J["Confirm: 'Remove N\nmember(s) from household?'"]:::bw
+    J -- "Cancel" --> G
+    J -- "Remove" --> K["Remove members from\nhousehold in Firebase"]:::bw --> L["Exit editing mode"]:::bw --> D
+    G -- "Tap 'Edit' again" --> L
+
+    E -- "Tap role chip\n(non-owner, non-pending\nmember, not editing)" --> M["Open Role Dropdown\n(Owner/Editor/Viewer)"]:::bw
+    M --> N{"User selects\na role"}:::bw
+    N -- "Select" --> O["Update member role\nin Firebase"]:::bw --> D
+    N -- "Dismiss" --> D
+
+    E -- "Tap X on tip card" --> P["Dismiss tip\n(remembered locally)"]:::bw --> D
+
+    Z1 --> Q["Enter email address"]:::bw
+    Q --> R{"Tap 'Send\nInvitation'"}:::bw
+    R --> S["Send household invite\nby email via Firebase"]:::bw
+    S --> T{"Invite\nsent successfully?"}:::bw
+    T -- "Yes" --> U["Alert: 'Invitation sent —\nthey'll see it in Settings\nonce signed in'"]:::bw --> V(["Return to People\n(pending invite shown)"]):::bw
+    T -- "No" --> W["Show inline error:\n'Unable to send invitation'"]:::bw --> Q
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

@@ -1,0 +1,87 @@
+{
+  "expo": {
+    "name": "Kilowatch",
+    "slug": "kilowatch-app",
+    "version": "1.0.21",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "scheme": "kilowatch",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kilowatch.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Kilowatch needs camera access to scan the QR code on your smart plug box.",
+        "NSLocationWhenInUseUsageDescription": "Kilowatch needs your location to read your Wi-Fi network name during smart plug pairing.",
+        "NSLocalNetworkUsageDescription": "Kilowatch needs local network access to connect and pair your smart plug."
+      }
+    },
+    "android": {
+      "package": "com.kilowatch.app",
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#000000"
+      },
+      "edgeToEdgeEnabled": true,
+      "softwareKeyboardLayoutMode": "pan",
+      "permissions": [
+        "CAMERA",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_WIFI_STATE",
+        "CHANGE_WIFI_STATE",
+        "INTERNET",
+        "BLUETOOTH",
+        "BLUETOOTH_CONNECT",
+        "BLUETOOTH_SCAN",
+        "POST_NOTIFICATIONS",
+        "RECEIVE_BOOT_COMPLETED",
+        "SCHEDULE_EXACT_ALARM",
+        "VIBRATE",
+        "WAKE_LOCK"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "./plugins/withAndroidBankQueries.js",
+      "./plugins/withAndroidExactAlarms.js",
+      "./plugins/withAndroidExtractNativeLibs.js",
+      "./plugins/withAndroidTuyaMaven.js",
+      "./plugins/withAndroidTuyaInit.js",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Kilowatch to use the camera to scan your smart plug QR code.",
+          "barcodeScannerEnabled": true
+        }
+      ],
+      "@react-native-google-signin/google-signin",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Kilowatch to access your photos so you can set a profile picture."
+        }
+      ],
+      "expo-font",
+      "expo-av",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#FE6023",
+          "defaultChannel": "kilowatch-schedules",
+          "sounds": []
+        }
+      ]
+    ]
+  }
+}

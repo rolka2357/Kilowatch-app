@@ -1,0 +1,44 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Open News & Tips Tab"]):::bw
+    B["Show Tips / News tab bar\n(default: Tips)"]:::bw
+    C{"User taps"}:::bw
+
+    A --> B --> C
+    C -- "Tap News" --> Z1(["Show News Tab\n(see diagram 3)"]):::bw
+    C -- "Tap Tips\n(default)" --> D
+
+    D["Load registered appliances,\nusage history and\ntips-generation eligibility"]:::bw
+    D --> E{"Eligibility check"}:::bw
+
+    E -- "No smart plugs\nregistered" --> F["Generate button disabled:\n'Register a smart plug first'"]:::bw
+    E -- "Plug(s) too new /\nnot enough usage history\n(< ~1 week)" --> G["Generate button disabled:\nshow days-left message"]:::bw
+    E -- "Eligible" --> H{"Already generated\ntips this week?\n(cooldownActive)"}:::bw
+
+    H -- "Yes" --> I["Button shows\n'Generated for this week'\n(disabled)"]:::bw
+    H -- "No" --> J["Button enabled:\n'Generate tips &\nrecommendations'"]:::bw
+    J -- "Tap" --> K["Compute room usage summary\nand generate tips/recommendations\nfor the week, cache result"]:::bw
+    K --> L
+
+    F --> M{"Has cached tips\nfrom a previous week?"}:::bw
+    G --> M
+    I --> M
+    L["Refresh view with\nnew tips"]:::bw --> M
+
+    M -- "No" --> N["Show 'No tips yet' card"]:::bw
+    M -- "Yes" --> O["Show 'Consumption by area'\ncard: room bubbles sized by\nshare of usage this week"]:::bw
+    O --> P["Show stats: Weeks Done,\nAvg/Week, Appliances"]:::bw
+    P --> Q["Show 'What we noticed\nthis week' insight cards\nper room (badge: High/Low/Stable)"]:::bw
+    Q --> R{"User taps a room\nbubble or insight card"}:::bw
+    R -- "Tap" --> Z2(["Go to Room Tips Detail\n(see diagram 2)"]):::bw
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

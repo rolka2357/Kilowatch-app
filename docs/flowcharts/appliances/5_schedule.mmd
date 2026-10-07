@@ -1,0 +1,53 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Enter Schedule screen\n(from Appliance Detail, Set Time)"]):::bw
+    B["Load schedules for\nthis plug, sorted by time"]:::bw
+    C{"Any schedules\nsaved?"}:::bw
+    D["Show empty state:\n'No schedules yet'"]:::bw
+    E["Display list: time, days,\nTurn On/Off pill, enabled\nswitch per row"]:::bw
+
+    A --> B --> C
+    C -- "No" --> D
+    C -- "Yes" --> E
+
+    D --> F{"User taps"}:::bw
+    E --> F
+
+    F -- "Tap back arrow" --> Z1(["Return to Appliance Detail"]):::bw
+    F -- "Toggle enabled switch\non a row" --> G["Update enabled flag\nin database directly"]:::bw --> E
+    F -- "Tap existing schedule row" --> H["Open editor, pre-filled\nwith that schedule's values"]:::bw
+    F -- "Tap + Add Schedule\n(Editor access only)" --> I["Open editor with\ndefault values"]:::bw
+
+    H --> J["Editor: Action (Turn On / Turn\nOff), Time wheel picker\n(hour : minute AM/PM),\nRepeat (every day / weekdays)"]:::bw
+    I --> J
+
+    J --> K{"User taps"}:::bw
+    K -- "Cancel / back" --> E
+    K -- "Delete (existing only)" --> L["Confirm alert:\nDelete schedule?"]:::bw
+    L --> M{"Confirmed?"}:::bw
+    M -- "No" --> J
+    M -- "Yes" --> N["Remove schedule\nfrom database"]:::bw --> E
+
+    K -- "Save" --> O{"At least one day\nselected (or every day)?"}:::bw
+    O -- "No" --> O1["Show validation alert"]:::bw --> J
+    O -- "Yes" --> P["Save schedule\nto database"]:::bw --> E
+
+    Q(["Background: Schedule Runner\n(checks current time\nwhile app is open)"]):::bw
+    R{"Current time matches an\nenabled schedule's time\nand day?"}:::bw
+    S["Send Turn On / Turn Off\ncommand to the plug"]:::bw
+    T["No action"]:::bw
+
+    Q --> R
+    R -- "Yes, first time\nthis minute" --> S --> Q
+    R -- "No" --> T --> Q
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

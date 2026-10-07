@@ -1,0 +1,50 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Enter Room Details"]):::bw
+    B["Display energy gauge (kWh/Php\ntoggle) + stats + Active count"]:::bw
+    C{"User taps"}:::bw
+
+    A --> B --> C
+
+    C -- "Tap back arrow" --> Z1(["Return to Appliances Home"]):::bw
+    C -- "Tap pencil (Edit Room)" --> D["Edit Room modal:\nedit room name"]:::bw
+    D --> E{"Tap Save\nor Cancel?"}:::bw
+    E -- "Cancel" --> B
+    E -- "Save" --> F["Update room name\nin database"]:::bw --> B
+
+    C -- "Tap View Room Analytics" --> Z2(["Go to Analytics flowchart\n(Room Analytics)"]):::bw
+
+    C -- "Tap View Appliances" --> G["Room Appliances screen:\ndisplay appliance cards\n(name, active/online, kWh, cost)"]:::bw
+    G --> H{"User taps a card"}:::bw
+    H -- "No selection active" --> Z3(["Go to Appliance Detail flowchart"]):::bw
+    H -- "Selection mode active" --> I["Toggle card selection"]:::bw --> G
+
+    G --> J{"User long-presses\na card"}:::bw
+    J -- "Yes" --> K["Enter / toggle\nmulti-select mode"]:::bw --> G
+
+    G --> L{"1 or more cards\nselected?"}:::bw
+    L -- "Yes" --> M["Show selection bar:\nCancel / Delete"]:::bw
+    M --> N{"User taps"}:::bw
+    N -- "Cancel" --> O["Clear selection"]:::bw --> G
+    N -- "Delete" --> P["Show confirm alert:\nDelete N appliance(s)?"]:::bw
+    P --> Q{"Confirmed?"}:::bw
+    Q -- "No" --> G
+    Q -- "Yes" --> R["Unbind selected plug(s)\nfrom Tuya"]:::bw
+    R --> S["Remove appliance record(s)\n(usage history retained)"]:::bw
+    S --> T["Remove device/live records,\nrelease device ownership"]:::bw
+    T --> U{"Room now has\nzero appliances?"}:::bw
+    U -- "Yes" --> V["Remove room"]:::bw --> Z1
+    U -- "No" --> W["Clear selection"]:::bw --> G
+
+    G -- "Tap back arrow" --> B
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

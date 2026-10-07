@@ -1,0 +1,45 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Open KiloSave Tab"]):::bw
+    B{"Is this the user's\nown home?"}:::bw
+    C["Show 'KiloSave is only\navailable in your own home'\nmessage"]:::bw
+    Z1(["Auto-navigate to\nAppliances tab"]):::bw
+    D["Load settings, saved weeks,\nappliances, rooms, live data,\nhistory and period snapshots"]:::bw
+    E{"Does home have a\nmonthly target goal?\n(hasGoal)"}:::bw
+
+    A --> B
+    B -- "No" --> C --> Z1
+    B -- "Yes" --> D --> E
+
+    E -- "No" --> F["Show empty state:\nbulb illustration + 'Set your\nweekly energy goal...' message"]:::bw
+    F --> G{"Can edit?\n(Owner/Editor)"}:::bw
+    G -- "No" --> H["Show 'Ask the home owner\nto set a goal'"]:::bw
+    G -- "Yes" --> I["Show 'Add a target goal'\nbutton"]:::bw
+    I -- "Tap" --> J
+    F --> K["Show 'How it works'\nsteps"]:::bw
+
+    E -- "Yes" --> L["Show Overview / History\ntab bar (default Overview)"]:::bw
+    L --> M{"User taps"}:::bw
+    M -- "Tap Overview" --> N(["Show Overview Tab\n(see diagram 2)"]):::bw
+    M -- "Tap History" --> O(["Show History Tab\n(see diagram 4)"]):::bw
+    M -- "Tap 'Edit Target Goal'\n(Overview, if canEdit)" --> J
+
+    J["Open Set Budget Goal screen"]:::bw
+    J --> P["Load current goal,\nshow ₱ amount + preset\nchips (100/250/500/750/1000)"]:::bw
+    P --> Q{"User taps a\npreset amount"}:::bw
+    Q --> R{"Can edit?"}:::bw
+    R -- "No" --> S["Alert: 'View only —\nAsk the home owner for\nEditor access'"]:::bw --> P
+    R -- "Yes" --> T["Save budget goal to Firebase\n(force new 4-week period if\nprevious period had ended)"]:::bw
+    T --> U(["Return to KiloSave Home"]):::bw
+    P --> V["Show 'How it works' steps\nand tracking disclaimer\n(dismissible)"]:::bw
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

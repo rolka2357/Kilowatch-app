@@ -1,0 +1,81 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    EU["Household User"]:::bw
+    EA["Admin"]:::bw
+    ET["Tuya Cloud /\nSmart Plug"]:::bw
+    EI["Identity Provider\n(Firebase Auth / Google)"]:::bw
+
+    P1(("1.0\nAuthenticate &\nManage Account")):::bw
+    P2(("2.0\nManage Appliances\n& Devices")):::bw
+    P3(("3.0\nMonitor Energy\n& Analytics")):::bw
+    P4(("4.0\nManage\nKiloSave")):::bw
+    P5(("5.0\nGenerate Tips\n& News")):::bw
+    P6(("6.0\nManage Household\n& Settings")):::bw
+    P7(("7.0\nAdmin Content &\nSupport Mgmt")):::bw
+
+    D1[["D1  Users\n(profiles, memberships,\nrate history, admins)"]]:::bw
+    D2[["D2  Homes & Household\n(members, invites,\nemail index)"]]:::bw
+    D3[["D3  Rooms, Appliances\n& Devices (+ schedules,\nusage limits, ownership)"]]:::bw
+    D4[["D4  Live & History\n(real-time + rollups)"]]:::bw
+    D5[["D5  KiloSave\n(settings, weeks, periods)"]]:::bw
+    D6[["D6  Tips Cache\n(monthly generated tips)"]]:::bw
+    D7[["D7  Content\n(news, providers)"]]:::bw
+
+    EU -- "Register / login /\nforgot-password request" --> P1
+    EI -- "Auth token /\nsign-in result" --> P1
+    P1 -- "Auth request\n(credentials / Google)" --> EI
+    P1 -- "Read/write profile,\nemail index" --> D1
+    P1 -- "Ensure own home\non first login" --> D2
+    P1 -- "Session result,\nprofile confirmation" --> EU
+
+    EU -- "Pairing request, Wi-Fi creds,\nroom/appliance names,\npower toggle, schedule &\nlimit rules" --> P2
+    P2 -- "Activation / on-off /\nschedule commands" --> ET
+    ET -- "Pairing ack,\ndevice status" --> P2
+    P2 -- "Create/update/delete room,\nappliance, device, schedule,\nusage-limit records" --> D3
+    D3 -- "Room/appliance/\ndevice list" --> P2
+    P2 -- "Appliance & room list,\ndevice status, confirmations" --> EU
+
+    ET -- "Real-time telemetry\n(kWh, power, voltage,\ncurrent, online)" --> P3
+    P3 -- "Live snapshot updates,\nhistory rollups" --> D4
+    D3 -- "Room/appliance/\ndevice list" --> P3
+    D4 -- "Live + history data" --> P3
+    EU -- "Period/unit selection,\nrefresh, analytics request" --> P3
+    P3 -- "Dashboards, usage charts,\ncost & comparison trends" --> EU
+
+    EU -- "Budget goal, set-aside\nconfirmation, bill amount" --> P4
+    P4 -- "Read/write settings,\nweeks, periods" --> D5
+    D4 -- "Usage data for\ncost estimate" --> P4
+    D2 -- "Owner/editor\npermission check" --> P4
+    P4 -- "Progress, reminders,\nhistory & coverage view" --> EU
+
+    EU -- "Generate-tips request,\nroom tip view" --> P5
+    D3 -- "Appliance/room layout" --> P5
+    D4 -- "Usage history" --> P5
+    P5 -- "Read/write monthly\ntips cache" --> D6
+    D7 -- "Curated news items" --> P5
+    P5 -- "Tips & insights,\nnews feed" --> EU
+
+    EU -- "Invite email, role change,\nmember removal, rate/\nprovider choice, theme" --> P6
+    P6 -- "Members, invites,\nemail index" --> D2
+    P6 -- "Electricity rate + history,\ntheme preference" --> D1
+    D7 -- "Provider catalog" --> P6
+    P6 -- "Member list, invite\nconfirmations, updated settings" --> EU
+
+    EA -- "News/provider CRUD,\ndemo triggers,\nsupport lookups" --> P7
+    P7 -- "Create/update\nnews & providers" --> D7
+    P7 -- "Seed/clear demo\n& test data" --> D1
+    P7 -- "Seed/clear demo\n& test data" --> D3
+    P7 -- "Seed/clear demo\n& test data" --> D5
+    D1 -- "User & device\nlists" --> P7
+    P7 -- "Dashboards,\nconfirmations" --> EA
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;

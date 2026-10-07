@@ -1,0 +1,52 @@
+%%{init: {'flowchart': {'curve': 'linear'}, 'themeVariables': {
+  'primaryColor': '#ffffff',
+  'primaryBorderColor': '#000000',
+  'primaryTextColor': '#000000',
+  'lineColor': '#000000',
+  'textColor': '#000000',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+flowchart TD
+    classDef bw fill:#ffffff,stroke:#000000,stroke-width:1.2px,color:#000000;
+
+    A(["Start: Open Edit\nName screen"]):::bw
+    B["Load current name\nfrom profile"]:::bw
+    C["User edits name field"]:::bw
+    D{"Tap 'Save Name'"}:::bw
+    E{"Name is at least\n2 characters?"}:::bw
+    F["Show inline error:\n'Name must be at least\n2 characters'"]:::bw
+    G["Update Firebase Auth\ndisplay name and\ndatabase profile"]:::bw
+    H["Alert: 'Saved — your\nname has been updated'"]:::bw
+    I(["Return to Account\n(name updates)"]):::bw
+
+    A --> B --> C --> D --> E
+    E -- "No" --> F --> C
+    E -- "Yes" --> G --> H --> I
+
+    J(["Start: Open Edit\nEmail screen"]):::bw
+    K["Load current email\nfrom profile"]:::bw
+    L["User edits email field"]:::bw
+    M{"Tap 'Send\nVerification'"}:::bw
+    N{"Valid email\nformat?"}:::bw
+    O["Show inline error:\n'Please enter a valid email'"]:::bw
+    P{"New email same as\ncurrent email?"}:::bw
+    Q{"Current email\nalready verified?"}:::bw
+    R["Alert: 'Already verified'"]:::bw
+    S["Resend verification\nemail for current address"]:::bw
+    T["Send verification link to\nnew address, mark profile\n'emailPendingVerification'"]:::bw
+    U["Alert: 'Check your email —\nopen the link to finish\nupdating (check Spam)'"]:::bw
+    V["Map Firebase error\n(requires-recent-login /\nemail-already-in-use /\ninvalid-email / etc.)"]:::bw
+    W(["Return to Account"]):::bw
+
+    J --> K --> L --> M --> N
+    N -- "No" --> O --> L
+    N -- "Yes" --> P
+    P -- "Yes" --> Q
+    Q -- "Yes" --> R --> L
+    Q -- "No" --> S --> U --> L
+    P -- "No" --> T --> U
+    U --> W
+    M --> X{"Error thrown?"}:::bw
+    X -- "Yes" --> V --> L
+
+    linkStyle default stroke:#000000,stroke-width:1.2px,fill:none;
